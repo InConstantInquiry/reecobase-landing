@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecoBase - Get Your Products Recommended by AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --dark: #0A0E27;
+            --light: #F7F9FB;
+            --accent: #00D9FF;
+        }
+
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            background: rgba(10, 14, 39, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .highlight {
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: rgba(247, 249, 251, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .stat {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(247, 249, 251, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Free Tool Card */
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(0, 217, 255, 0.05) 100%);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            animation: slideUp 0.8s ease-out 0.6s backwards;
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-card::before {
+            content: 'FREE TOOL';
+            position: absolute;
+            top: -12px;
+            left: 30px;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.3rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            border-radius: 20px;
+        }
+
+        .tool-card h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .tool-card p {
+            color: rgba(247, 249, 251, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: rgba(247, 249, 251, 0.9);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.5);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            font-family: 'Archivo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(10, 14, 39, 0.7);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(247, 249, 251, 0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 8rem 2rem;
+            background: linear-gradient(180deg, var(--dark) 0%, rgba(0, 78, 137, 0.1) 100%);
+        }
+
+        .problem-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .problem-content h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .problem-card {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .problem-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .problem-card h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .problem-card p {
+            color: rgba(247, 249, 251, 0.7);
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 8rem 2rem;
+            background: var(--dark);
+        }
+
+        .how-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step {
+            position: relative;
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin: 0 auto 1.5rem;
+        }
+
+        .step h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: rgba(247, 249, 251, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Pricing Preview */
+        .pricing-preview {
+            padding: 8rem 2rem;
+            background: linear-gradient(180deg, var(--dark) 0%, rgba(0, 78, 137, 0.15) 100%);
+        }
+
+        .pricing-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 107, 53, 0.05);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.03);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.4rem 1.5rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            border-radius: 20px;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .pricing-card.featured:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        .price {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .price span {
+            font-size: 1.5rem;
+            color: rgba(247, 249, 251, 0.6);
+        }
+
+        .plan-name {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            color: rgba(247, 249, 251, 0.8);
+        }
+
+        .features li::before {
+            content: '✓ ';
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            background: var(--dark);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1.5rem 4rem;
+            background: var(--primary);
+            color: var(--dark);
+            text-decoration: none;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-btn:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2) 0%, rgba(255, 107, 53, 0.2) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .success-message h4 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: rgba(247, 249, 251, 0.8);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .problem-grid,
+            .steps,
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="#" class="logo">
+                <span class="logo-icon">R</span>
+                RecoBase
+            </a>
+            <div class="nav-links">
+                <a href="#how">How It Works</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Is Your Shopify Store <span class="highlight">Invisible to AI?</span></h1>
+                <p>Right now, thousands of shoppers are asking ChatGPT, Claude, and Perplexity for product recommendations. If your products aren't being mentioned, you're losing sales.</p>
+                
+                <div class="stat-row">
+                    <div class="stat">
+                        <span class="stat-number">67%</span>
+                        <span class="stat-label">of shoppers now use AI for product research</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3%</span>
+                        <span class="stat-label">of stores actually get recommended</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3>Check Your Products Now</h3>
+                <p>Enter your product details below and we'll check if AI chatbots are recommending your products when shoppers ask for buying advice.</p>
+                
+                <form id="checkForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" name="productName" placeholder="e.g., Premium Leather Wallet" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Product Category</label>
+                        <input type="text" id="category" name="category" placeholder="e.g., Minimalist Wallets" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Check My Products (Free)</button>
+                </form>
+
+                <div class="success-message" id="successMessage">
+                    <h4>✓ We're on it!</h4>
+                    <p>We'll test your product across ChatGPT, Claude, and Perplexity and email you the results within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="problem-content">
+            <span class="section-tag">The Problem</span>
+            <h2>Your competitors are showing up in AI. You're not.</h2>
+            
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">🤖</div>
+                    <h3>AI Is The New Google</h3>
+                    <p>Shoppers are skipping Google and asking AI for recommendations. "Best wireless headphones under $100" returns 5 products. Yours isn't one of them.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <div class="problem-icon">👻</div>
+                    <h3>You're Invisible</h3>
+                    <p>AI doesn't know about your products. It pulls from specific sources - review sites, databases, Reddit. If you're not there, you don't exist.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <div class="problem-icon">💸</div>
+                    <h3>Lost Sales Daily</h3>
+                    <p>Every day, potential customers ask AI for recommendations in your category. Every day, they buy from competitors who optimized for AI discovery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how">
+        <div class="how-content">
+            <span class="section-tag">How It Works</span>
+            <h2>Make AI your #1 traffic source</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Connect Your Store</h3>
+                    <p>Link your Shopify store and we'll analyze your products, descriptions, and current AI visibility.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>We Optimize</h3>
+                    <p>We syndicate your products to AI-friendly sources, optimize descriptions, and build your citation network.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Track & Grow</h3>
+                    <p>Get weekly reports showing which AI mentioned your products, for what queries, and how often.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Preview -->
+    <section class="pricing-preview" id="pricing">
+        <div class="pricing-content">
+            <span class="section-tag">Pricing</span>
+            <h2>Simple, transparent pricing</h2>
+            
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="plan-name">Starter</div>
+                    <div class="price">$35<span>/mo</span></div>
+                    <p>Test your best-selling products</p>
+                    <ul class="features">
+                        <li>Up to 15 products tracked</li>
+                        <li>Weekly AI mention reports</li>
+                        <li>Product optimization tips</li>
+                        <li>Email support</li>
+                    </ul>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="plan-name">Growth</div>
+                    <div class="price">$99<span>/mo</span></div>
+                    <p>For serious e-commerce stores</p>
+                    <ul class="features">
+                        <li>Up to 100 products tracked</li>
+                        <li>Daily AI mention reports</li>
+                        <li>Advanced optimization</li>
+                        <li>Review syndication</li>
+                        <li>Competitor tracking (5 competitors)</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="plan-name">Pro</div>
+                    <div class="price">$299<span>/mo</span></div>
+                    <p>Unlimited products for brands</p>
+                    <ul class="features">
+                        <li>Unlimited products tracked</li>
+                        <li>Real-time AI monitoring</li>
+                        <li>Full catalog optimization</li>
+                        <li>Dedicated account manager</li>
+                        <li>Competitor tracking (unlimited)</li>
+                        <li>Custom integrations</li>
+                        <li>White-label reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Stop losing sales to invisible competitors</h2>
+            <a href="#" class="cta-btn" onclick="document.getElementById('productName').focus(); return false;">Check Your Products Free</a>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('checkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                productName: document.getElementById('productName').value,
+                category: document.getElementById('category').value,
+                email: document.getElementById('email').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Store the data (in production, this would send to your backend/Supabase)
+            console.log('Form submitted:', formData);
+            
+            // Show success message
+            document.getElementById('successMessage').classList.add('show');
+            
+            // Reset form
+            this.reset();
+            
+            // In production, you would send this to your backend:
+            // fetch('/api/check-product', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(formData)
+            // });
+        });
+    </script>
+</body>
+</html>
